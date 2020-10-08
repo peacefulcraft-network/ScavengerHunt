@@ -108,7 +108,7 @@ public class BlockInteractListener implements Listener {
      */
     public void loadPumpkins() {
         World world = ScavengerHunt.getPluginInstance().getServer().getWorld("world");
-        
+
         locMap.put(1, new Location(world, -7, 74, 356));
         locMap.put(2, new Location(world, -109, 74, 198));
         locMap.put(3, new Location(world, -106, 117, 312));
@@ -127,7 +127,7 @@ public class BlockInteractListener implements Listener {
     private Integer checkPumpkin(Block block) {
         Location loc = block.getLocation();
 
-        if(block.getType() == Material.PUMPKIN || block.getType() == Material.JACK_O_LANTERN) {
+        if(block.getType() == Material.PUMPKIN || block.getType() == Material.JACK_O_LANTERN || block.getType() == Material.CARVED_PUMPKIN) {
             int i = 1;
             for(Location l : locMap.values()) {
                 if(l.getBlockX() == loc.getBlockX() && l.getBlockY() == loc.getBlockY() && l.getBlockZ() == loc.getBlockZ()) {

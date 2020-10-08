@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.md_5.bungee.api.ChatColor;
+import net.peacefulcraft.scavengerhunt.commands.ScavengerHuntCommand;
 import net.peacefulcraft.scavengerhunt.config.ScavangerHuntConfig;
 import net.peacefulcraft.scavengerhunt.listeners.BlockInteractListener;
 
@@ -21,6 +22,7 @@ public class ScavengerHunt extends JavaPlugin {
         public static Boolean showDebug() { return cfg.getDebug(); }
 
     private static BlockInteractListener huntHandler;
+        public static BlockInteractListener getHuntHandler() { return huntHandler; }
 
     public ScavengerHunt() {
         sh = this;
@@ -46,7 +48,7 @@ public class ScavengerHunt extends JavaPlugin {
     }
 
     public void loadCommands() {
-
+        this.getCommand("scavengerhunt").setExecutor(new ScavengerHuntCommand());
     }
 
     public void loadEventListeners() {

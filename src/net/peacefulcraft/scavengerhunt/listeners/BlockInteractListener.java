@@ -131,8 +131,16 @@ public class BlockInteractListener implements Listener {
     /**
      * Calculates player remaining pumpkins
      */
-    private Integer getRemainingPumpkins(UUID id) {
+    public Integer getRemainingPumpkins(UUID id) {
+        if(!playerMap.containsKey(id)) { return -1; }
         return locMap.keySet().size() - playerMap.get(id).size();
+    }
+
+    /**
+     * Calculates total number of pumpkins
+     */
+    public Integer getPumpkinAmount() {
+        return locMap.keySet().size();
     }
 
     @EventHandler
@@ -153,13 +161,15 @@ public class BlockInteractListener implements Listener {
         // If player has already found this pumpkin
         if(playerMap.get(id).contains(checked)) { 
             int remainder = getRemainingPumpkins(id);
-            p.sendMessage(ScavengerHunt.getPrefix() + ChatColor.WHITE + " You have already found this pumpkin! You have " + String.valueOf(remainder) + " pumpkins left!");
+            String m = " You have already found this pumpkin! You have " + String.valueOf(remainder) + " pumpkins left!";
+            p.sendMessage(ScavengerHunt.getPrefix() + ChatColor.WHITE + m);
             return; 
         }
 
         playerMap.get(id).add(checked);
         int remainder = getRemainingPumpkins(id);
-        p.sendMessage(ScavengerHunt.getPrefix() + ChatColor.WHITE + " Pumpkin found! You have " + String.valueOf(remainder) + " pumpkins left!");
+        String m = " Pumpkin found! You have " + String.valueOf(remainder) + " pumpkins left!";
+        p.sendMessage(ScavengerHunt.getPrefix() + ChatColor.WHITE + m);
     }
 
 }

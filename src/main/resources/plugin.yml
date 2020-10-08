@@ -11,11 +11,11 @@ depend: []
 softdepend: []
 
 commands:
-  example:
-    aliases: [ 'exmple' ]
-    description: This is an example command
-    permission-message:  Permission templateus.example is required to use this command
-    usage: /<command> to use the example command.
+  scavengerhunt:
+    aliases: [ 'sh' ]
+    description: Main command for plugin
+    permission-message: Permissions are required to use this command
+    usage: /<command> to use command
 
 permissions:
   scavengerhunt.*:

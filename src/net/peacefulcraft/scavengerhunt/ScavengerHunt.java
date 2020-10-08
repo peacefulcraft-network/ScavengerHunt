@@ -4,11 +4,15 @@ import java.util.logging.Level;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.md_5.bungee.api.ChatColor;
 import net.peacefulcraft.scavengerhunt.config.ScavangerHuntConfig;
 import net.peacefulcraft.scavengerhunt.listeners.BlockInteractListener;
 
 public class ScavengerHunt extends JavaPlugin {
     
+    private static final String prefix = ChatColor.RED + "[" + ChatColor.BLUE + "ScavengerHunt" + ChatColor.RED + "]";
+        public static String getPrefix() { return prefix;}
+
     public static ScavengerHunt sh;
         public static ScavengerHunt getPluginInstance() { return sh; }
 
@@ -46,7 +50,7 @@ public class ScavengerHunt extends JavaPlugin {
     }
 
     public void loadEventListeners() {
-
+        getServer().getPluginManager().registerEvents(new BlockInteractListener(), this);
     }
 
     public static void logDebug(String debug) {

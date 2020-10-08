@@ -8,11 +8,15 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityInteractEvent;
 
+import net.md_5.bungee.api.ChatColor;
 import net.peacefulcraft.scavengerhunt.ScavengerHunt;
 import net.peacefulcraft.scavengerhunt.io.HuntConfig;
 import net.peacefulcraft.scavengerhunt.io.IOHandler;
@@ -106,9 +110,56 @@ public class BlockInteractListener implements Listener {
         //locMap.put(1, new Location(ScavengerHunt.getPluginInstance().getServer().getWorld(name), x, y, z))
     }
 
+    /**
+     * Checks if block is in locmap
+     */
+    private Integer checkPumpkin(Block block) {
+        Location loc = block.getLocation();
+
+        if(block.getType() == Material.PUMPKIN || block.getType() == Material.JACK_O_LANTERN) {
+            int i = 1;
+            for(Location l : locMap.values()) {
+                if(l.getBlockX() == loc.getBlockX() && l.getBlockY() == loc.getBlockY() && l.getBlockZ() == loc.getBlockZ()) {
+                    return i;
+                }
+                i++;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Calculates player remaining pumpkins
+     */
+    private Integer getRemainingPumpkins(UUID id) {
+        return locMap.keySet().size() - playerMap.get(id).size();
+    }
+
     @EventHandler
     public void onInteract(EntityInteractEvent e) {
-        
+        // If not player we don't care
+        if(!(e.getEntity() instanceof Player)) { return; }
+        Player p = (Player)e.getEntity();
+
+        // If player hit one of the pumpkins
+        int checked = checkPumpkin(e.getBlock());
+        if(checked == -1) { return; }
+
+        UUID id = p.getUniqueId();
+        if(!playerMap.containsKey(id)) {
+            playerMap.put(id, new ArrayList<>());
+        }
+
+        // If player has already found this pumpkin
+        if(playerMap.get(id).contains(checked)) { 
+            int remainder = getRemainingPumpkins(id);
+            p.sendMessage(ScavengerHunt.getPrefix() + ChatColor.WHITE + " You have already found this pumpkin! You have " + String.valueOf(remainder) + " pumpkins left!");
+            return; 
+        }
+
+        playerMap.get(id).add(checked);
+        int remainder = getRemainingPumpkins(id);
+        p.sendMessage(ScavengerHunt.getPrefix() + ChatColor.WHITE + " Pumpkin found! You have " + String.valueOf(remainder) + " pumpkins left!");
     }
 
 }

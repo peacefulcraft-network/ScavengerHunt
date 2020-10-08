@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -106,8 +107,18 @@ public class BlockInteractListener implements Listener {
      * Loads hardcoded location data
      */
     public void loadPumpkins() {
-        // Format for adding pumpkin locations. Need world name and location coords
-        //locMap.put(1, new Location(ScavengerHunt.getPluginInstance().getServer().getWorld(name), x, y, z))
+        World world = ScavengerHunt.getPluginInstance().getServer().getWorld("world");
+        
+        locMap.put(1, new Location(world, -7, 74, 356));
+        locMap.put(2, new Location(world, -109, 74, 198));
+        locMap.put(3, new Location(world, -106, 117, 312));
+        locMap.put(4, new Location(world, -51, 75, 246));
+        locMap.put(5, new Location(world, -28, 70, 144));
+        locMap.put(6, new Location(world, -89, 65, 266));
+        locMap.put(7, new Location(world, -7, 60, 88));
+        locMap.put(8, new Location(world, -166, 145, 232));
+        locMap.put(9, new Location(world, -20, 63, 236));
+        locMap.put(10, new Location(world, -59, 65, 54));
     }
 
     /**

@@ -2,8 +2,8 @@
 # Reference
 # https://bukkit.gamepedia.com/Plugin_YAML
 #
-name: Templateus
-main: net.peacefulcraft.templateus.Templateus
+name: ScavengerHunt
+main: net.peacefulcraft.scavengerhunt.ScavengerHunt
 version: 0.0.1
 api-version: 1.16
 website: https://www.peacefulcraft.net/
@@ -18,10 +18,10 @@ commands:
     usage: /<command> to use the example command.
 
 permissions:
-  templateus.*:
+  scavengerhunt.*:
     description: Gives access to all templateus commands
     children:
-      templateus.example: true
-  templateus.example:
+      scavengerhunt.example: true
+  scavengerhunt.example:
     description: Gives access to tempateus' example command
     default: op

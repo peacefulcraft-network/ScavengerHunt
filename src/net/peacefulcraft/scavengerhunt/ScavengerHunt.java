@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.peacefulcraft.scavengerhunt.config.ScavangerHuntConfig;
+import net.peacefulcraft.scavengerhunt.listeners.BlockInteractListener;
 
 public class ScavengerHunt extends JavaPlugin {
     
@@ -15,9 +16,13 @@ public class ScavengerHunt extends JavaPlugin {
         public static ScavangerHuntConfig getSHConfig() { return cfg; }
         public static Boolean showDebug() { return cfg.getDebug(); }
 
+    private static BlockInteractListener huntHandler;
+
     public ScavengerHunt() {
         sh = this;
         cfg = new ScavangerHuntConfig(getConfig());
+
+        huntHandler = new BlockInteractListener();
     }
 
     public void onEnable() {
@@ -30,7 +35,7 @@ public class ScavengerHunt extends JavaPlugin {
     }
 
     public void onDisable() {
-        //TODO: save player data
+        huntHandler.save();
 
         this.saveConfig();
         this.getLogger().info("ScavenegerHunt has been disabled!");

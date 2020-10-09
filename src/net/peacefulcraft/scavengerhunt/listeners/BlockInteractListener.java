@@ -49,6 +49,10 @@ public class BlockInteractListener implements Listener {
         // Section: "Pumpkins" -> list of integers
         for(IOLoader<ScavengerHunt> s1 : playerLoaders) {
             String name = s1.getFile().getName();
+
+            // Skipping the example file
+            if(name.equalsIgnoreCase("ExampleList") || name.equalsIgnoreCase("ExampleList.yml")) { continue; }
+
             HuntConfig hc = new HuntConfig(name, s1.getFile(), s1.getCustomConfig());
 
             // Possible redudant conversion

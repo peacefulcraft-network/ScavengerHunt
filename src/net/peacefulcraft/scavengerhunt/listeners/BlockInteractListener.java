@@ -121,7 +121,7 @@ public class BlockInteractListener implements Listener {
         locMap.put(6, new Location(world, -89, 65, 266));
         locMap.put(7, new Location(world, -7, 60, 88));
         locMap.put(8, new Location(world, -166, 145, 232));
-        locMap.put(9, new Location(world, -20, 63, 236));
+        locMap.put(9, new Location(world, -9, 63, 246));
         locMap.put(10, new Location(world, -59, 65, 54));
     }
 

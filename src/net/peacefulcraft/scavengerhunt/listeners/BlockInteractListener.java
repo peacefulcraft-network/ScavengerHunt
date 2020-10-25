@@ -15,7 +15,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.md_5.bungee.api.ChatColor;
 import net.peacefulcraft.scavengerhunt.ScavengerHunt;
@@ -25,7 +26,7 @@ import net.peacefulcraft.scavengerhunt.io.IOLoader;
 
 public class BlockInteractListener implements Listener {
     
-    private HashMap<UUID,List<Integer>> playerMap = new HashMap<>();
+    private static HashMap<UUID,List<Integer>> playerMap = new HashMap<>();
 
     private HashMap<Integer, Location> locMap = new HashMap<>();
 
@@ -34,9 +35,17 @@ public class BlockInteractListener implements Listener {
         loadPumpkins();
     }
 
+    /**
+     * Safely reloads all data saved in config
+     */
+    public void reload() {
+        save();
+        loadPlayerData();
+    }
+
     public void loadPlayerData() {
 
-        this.playerMap.clear();
+        playerMap.clear();
         this.locMap.clear();
 
         // Loading player data from file.
@@ -53,15 +62,21 @@ public class BlockInteractListener implements Listener {
             // Skipping the example file
             if(name.equalsIgnoreCase("ExampleList") || name.equalsIgnoreCase("ExampleList.yml")) { continue; }
 
-            HuntConfig hc = new HuntConfig(name, s1.getFile(), s1.getCustomConfig());
+            //HuntConfig hc = new HuntConfig(name, s1.getFile(), s1.getCustomConfig());
+            
+            FileConfiguration config = s1.getCustomConfig();
+            List<String> tempLis = config.getStringList("Pumpkins");
 
             // Possible redudant conversion
-            List<String> tempLis = hc.getStringList("Pumpkins");
             List<Integer> intLis = new ArrayList<>();
             for(String s : tempLis) {
+                ScavengerHunt.logDebug("Loading: " + s);
                 intLis.add(Integer.valueOf(s));
             }
-            playerMap.put(UUID.fromString(name), intLis);
+
+            //name = name.replace(".yml", "");
+            playerMap.put(UUID.fromString(name.replace(".yml","")), intLis);
+            ScavengerHunt.logDebug("Loaded: " + name + " ,with: " + String.valueOf(intLis));
         }
     }
 
@@ -71,6 +86,8 @@ public class BlockInteractListener implements Listener {
         List<File> playerFiles = IOHandler.getAllFiles(defaultPlayer.getFile().getParent());
         List<IOLoader<ScavengerHunt>> playerLoaders = IOHandler.getSaveLoad(ScavengerHunt.getPluginInstance(), playerFiles, "data");
 
+        ScavengerHunt.logDebug("Saving " + String.valueOf(playerMap.size()) + " entries.");
+
         // Reading all player data currently in config
         for(UUID id : playerMap.keySet()) {
             // Fetching or creating new loader
@@ -78,19 +95,24 @@ public class BlockInteractListener implements Listener {
             FileConfiguration config = loader.getCustomConfig();
             
             List<Integer> lis = playerMap.get(id);
+            List<String> sLis = new ArrayList<>();
+            for(Integer i : lis) {
+                sLis.add(String.valueOf(i));
+            }
 
             config.createSection("Pumpkins");
-            config.set("Pumpkins", lis);
+            config.set("Pumpkins", sLis);
 
             try {
                 config.save(loader.getFile());
+                ScavengerHunt.logDebug("Saved: " + loader.getFile().getName());
             } catch(IOException ex) {
                 ScavengerHunt.logSevere("Failed to save: " + loader.getFile());
                 continue;
             }
         }
 
-        this.playerMap.clear();
+        playerMap.clear();
         ScavengerHunt.logInfo("ScavengerHunt player data successfully saved!");
     }
 
@@ -111,7 +133,7 @@ public class BlockInteractListener implements Listener {
      * Loads hardcoded location data
      */
     public void loadPumpkins() {
-        World world = ScavengerHunt.getPluginInstance().getServer().getWorld("world");
+        World world = ScavengerHunt.getPluginInstance().getServer().getWorld("SwordCraftOnline");
 
         locMap.put(1, new Location(world, -7, 74, 356));
         locMap.put(2, new Location(world, -109, 74, 198));
@@ -151,6 +173,10 @@ public class BlockInteractListener implements Listener {
         return locMap.keySet().size() - playerMap.get(id).size();
     }
 
+    public void printList(UUID id) {
+        ScavengerHunt.logDebug(String.valueOf(playerMap.get(id)));
+    }
+
     /**
      * Calculates total number of pumpkins
      */
@@ -159,18 +185,21 @@ public class BlockInteractListener implements Listener {
     }
 
     @EventHandler
-    public void onInteract(EntityInteractEvent e) {
-        // If not player we don't care
-        if(!(e.getEntity() instanceof Player)) { return; }
-        Player p = (Player)e.getEntity();
+    public void onInteract(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+        if(e.getAction() != Action.RIGHT_CLICK_BLOCK) { return; }
 
         // If player hit one of the pumpkins
-        int checked = checkPumpkin(e.getBlock());
-        if(checked == -1) { return; }
+        int checked = checkPumpkin(e.getClickedBlock());
+        if(checked == -1) { 
+            ScavengerHunt.logDebug(p.getLocation().getWorld().getName());
+            return; 
+        }
 
         UUID id = p.getUniqueId();
         if(!playerMap.containsKey(id)) {
             playerMap.put(id, new ArrayList<>());
+            ScavengerHunt.logDebug("Added to map. Map size: " + playerMap.size());
         }
 
         // If player has already found this pumpkin

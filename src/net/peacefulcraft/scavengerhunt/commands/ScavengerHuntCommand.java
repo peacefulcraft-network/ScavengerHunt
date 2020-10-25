@@ -29,6 +29,15 @@ public class ScavengerHuntCommand implements CommandExecutor {
                 }
                 return true;
             }
+            if(args[0].equalsIgnoreCase("check")) {
+                Player p = (Player) sender;
+                ScavengerHunt.getHuntHandler().printList(p.getUniqueId());
+                return true;
+            }
+            if(args[0].equalsIgnoreCase("reload")) {
+                ScavengerHunt.getHuntHandler().reload();
+                return true;
+            }
         }
 
         return true;

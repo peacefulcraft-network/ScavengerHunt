@@ -44,7 +44,7 @@ public class ScavengerHunt extends JavaPlugin {
         huntHandler.save();
 
         this.saveConfig();
-        this.getLogger().info("ScavenegerHunt has been disabled!");
+        this.getLogger().info("ScavengerHunt has been disabled!");
     }
 
     public void loadCommands() {

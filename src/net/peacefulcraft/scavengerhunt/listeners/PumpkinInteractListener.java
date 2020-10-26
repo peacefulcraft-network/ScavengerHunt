@@ -70,7 +70,7 @@ public class PumpkinInteractListener implements Listener {
 							ItemStack pumpkin = new ItemStack(Material.JACK_O_LANTERN, 1);
 							ItemMeta pumpkinMeta = pumpkin.getItemMeta();
 							pumpkinMeta.setDisplayName("Halloween 2020 Scavenger Hunt Winner");
-							pumpkinMeta.setLore(new ArrayList<String>(Arrays.asList("Congratulations. You found all 10 of the hidden pumpkins in spawn during the 2020 Halloween Scavenger Hunt!")));
+							pumpkinMeta.setLore(new ArrayList<String>(Arrays.asList("Congratulations. You found all 10 of the hidden pumpkins", "in spawn during the 2020 Halloween Scavenger Hunt!")));
 							pumpkin.setItemMeta(pumpkinMeta);
 		
 							// If space, add to inv. Otherwise drop it at the player's location

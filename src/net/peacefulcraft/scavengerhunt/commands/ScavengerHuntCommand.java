@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.peacefulcraft.scavengerhunt.ScavengerHunt;
+import net.peacefulcraft.scavengerhunt.io.PlayerDataHandler;
 
 public class ScavengerHuntCommand implements CommandExecutor {
 
@@ -21,21 +22,19 @@ public class ScavengerHuntCommand implements CommandExecutor {
 
             if(args[0].equalsIgnoreCase("progress")) {
                 Player p = (Player) sender;
-                int remainder = ScavengerHunt.getHuntHandler().getRemainingPumpkins(p.getUniqueId());
+                PlayerDataHandler playerData = null;
+                if (ScavengerHunt.getDataCache().containsKey(p.getUniqueId())) {
+                    playerData = ScavengerHunt.getDataCache().get(p.getUniqueId());
+                } else {
+                    playerData = ScavengerHunt.loadPlayerData(p);
+                }
+
+                int remainder = 10 - playerData.numKeys();
                 if(remainder == -1) {
                     p.sendMessage(ScavengerHunt.getPrefix() + ChatColor.WHITE + " You have found no pumpkins!");
                 } else {
                     p.sendMessage(ScavengerHunt.getPrefix() + ChatColor.WHITE + " You have " + String.valueOf(remainder) + " pumpkins left!");
                 }
-                return true;
-            }
-            if(args[0].equalsIgnoreCase("check")) {
-                Player p = (Player) sender;
-                ScavengerHunt.getHuntHandler().printList(p.getUniqueId());
-                return true;
-            }
-            if(args[0].equalsIgnoreCase("reload")) {
-                ScavengerHunt.getHuntHandler().reload();
                 return true;
             }
         }

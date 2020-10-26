@@ -19,9 +19,4 @@ commands:
 
 permissions:
   scavengerhunt.*:
-    description: Gives access to all templateus commands
-    children:
-      scavengerhunt.example: true
-  scavengerhunt.example:
-    description: Gives access to tempateus' example command
-    default: op
+    description: Gives access to all scavenger hunt commands
